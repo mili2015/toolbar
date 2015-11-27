@@ -38,6 +38,9 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        print();
+
+
     }
 
     @Override
@@ -60,5 +63,10 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void print()
+    {
+        System.out.println("print");
     }
 }
