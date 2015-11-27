@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+/**
+ * Other chance. Android studio to GitHub
+ */
 public class MainActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
