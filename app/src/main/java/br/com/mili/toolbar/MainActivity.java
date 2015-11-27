@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 /**
  * Other chance. Android studio to GitHub
+ * Now GitHub to Android Studio
  */
 public class MainActivity extends ActionBarActivity {
 
