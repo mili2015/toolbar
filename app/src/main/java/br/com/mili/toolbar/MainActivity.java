@@ -25,8 +25,6 @@ public class MainActivity extends ActionBarActivity {
 
         toolbar = (Toolbar) findViewById(R.id.tb_top);
 
-
-
         setSupportActionBar(toolbar);
 
         fab = (ImageView) findViewById(R.id.imageButton);
