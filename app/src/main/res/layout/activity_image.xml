@@ -25,7 +25,7 @@
         android:layout_marginTop="39dp"
         android:onClick="download" />
 
-    <ImageView
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/imageView"
@@ -33,6 +33,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="39dp"
-        android:scaleType="matrix"
+
         />
 </RelativeLayout>

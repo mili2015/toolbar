@@ -19,11 +19,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+
 import java.io.ByteArrayOutputStream;
 
 public class ImageActivity extends ActionBarActivity {
 
-    private ImageView imageView;
+    private SubsamplingScaleImageView imageView;
     private ScaleGestureDetector gestureDetector;
     private Matrix matrix = new Matrix();
 
@@ -34,8 +37,8 @@ public class ImageActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
-        imageView = (ImageView) findViewById(R.id.imageView);
-        gestureDetector = new ScaleGestureDetector(this, new ScaleListener());
+        imageView = (com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView) findViewById(R.id.imageView);
+        //gestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
         db = this.openOrCreateDatabase("toolbar.db", Context.MODE_PRIVATE,  null);
         db.execSQL("drop table if exists image; ");
@@ -110,19 +113,16 @@ public class ImageActivity extends ActionBarActivity {
 
                     byte[] img = c.getBlob(c.getColumnIndex("arquivo"));
                     Bitmap bmp = BitmapFactory.decodeByteArray(img, 0, img.length);
-                    imageView.setImageBitmap(bmp);
+
+                    imageView.setImage(ImageSource.bitmap(bmp));
+                    //tImageBitmap(bmp);
                 }
                 c.moveToNext();
             }
 
     }
 
-    public boolean onTouchEvent(MotionEvent motionEvent)
-    {
-        //Log.d("mili","onTouchEvent");
-        gestureDetector.onTouchEvent(motionEvent);
-        return true;
-    }
+
 
 
    private class ScaleListener implements ScaleGestureDetector.OnScaleGestureListener {
@@ -133,8 +133,8 @@ public class ImageActivity extends ActionBarActivity {
             float scaleFactor = detector.getScaleFactor();
            // scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.0f));
 
-            matrix.setScale(scaleFactor,scaleFactor);
-            imageView.setImageMatrix(matrix);
+            matrix.setScale(scaleFactor, scaleFactor);
+           // imageView.setImageMatrix(matrix);
 
             Log.d("mili", "onScale -> "+scaleFactor);
             return true;
