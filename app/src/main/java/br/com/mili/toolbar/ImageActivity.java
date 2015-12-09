@@ -6,12 +6,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -21,6 +24,9 @@ import java.io.ByteArrayOutputStream;
 public class ImageActivity extends ActionBarActivity {
 
     private ImageView imageView;
+    private ScaleGestureDetector gestureDetector;
+    private Matrix matrix = new Matrix();
+
     private SQLiteDatabase db;
     private Uri targetUri;
     @Override
@@ -29,6 +35,7 @@ public class ImageActivity extends ActionBarActivity {
         setContentView(R.layout.activity_image);
 
         imageView = (ImageView) findViewById(R.id.imageView);
+        gestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
         db = this.openOrCreateDatabase("toolbar.db", Context.MODE_PRIVATE,  null);
         db.execSQL("drop table if exists image; ");
@@ -62,9 +69,9 @@ public class ImageActivity extends ActionBarActivity {
     public void save(View view)
     {
         try {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.grande);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.papel700gimp);
             ByteArrayOutputStream streamJM = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, streamJM);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, streamJM);
 
             byte [] img = streamJM.toByteArray();
 
@@ -95,16 +102,54 @@ public class ImageActivity extends ActionBarActivity {
 
             while (!c.isAfterLast()) {
 
-                boolean next = c.moveToNext();
+                boolean next = first ? first : c.moveToNext();
 
-                Log.d("mili", " Next "+next);
+                if(next)
+                {
+                    Log.d("mili", " Next "+next);
 
-                byte[] img = c.getBlob(c.getColumnIndex("arquivo"));
-                Bitmap bmp = BitmapFactory.decodeByteArray(img, 0, img.length);
-                imageView.setImageBitmap(bmp);
-
-                Toast.makeText(this, "download", Toast.LENGTH_LONG).show();
+                    byte[] img = c.getBlob(c.getColumnIndex("arquivo"));
+                    Bitmap bmp = BitmapFactory.decodeByteArray(img, 0, img.length);
+                    imageView.setImageBitmap(bmp);
+                }
+                c.moveToNext();
             }
 
     }
+
+    public boolean onTouchEvent(MotionEvent motionEvent)
+    {
+        //Log.d("mili","onTouchEvent");
+        gestureDetector.onTouchEvent(motionEvent);
+        return true;
+    }
+
+
+   private class ScaleListener implements ScaleGestureDetector.OnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector)
+        {
+            Log.d("mili","onScale");
+            float scaleFactor = detector.getScaleFactor();
+           // scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.0f));
+
+            matrix.setScale(scaleFactor,scaleFactor);
+            imageView.setImageMatrix(matrix);
+
+            Log.d("mili", "onScale -> "+scaleFactor);
+            return true;
+        }
+
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            Log.d("mili","onScaleBegin");
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            Log.d("mili","onScaleEnd");
+        }
+    }
+
 }

@@ -32,5 +32,7 @@
         android:layout_below="@+id/btDownload"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="39dp" />
+        android:layout_marginTop="39dp"
+        android:scaleType="matrix"
+        />
 </RelativeLayout>
